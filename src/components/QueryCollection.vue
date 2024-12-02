@@ -1,8 +1,10 @@
 <script setup>
-	import { ref, watchEffect } from 'vue';
+	import { provide, ref } from 'vue';
 	
 	import QueryResults from './QueryResults.vue';
 	import QueryInput from './QueryInput.vue';
+	import Alert from './Alert.vue';
+	import { parse } from '../tools/jsony';
 
 	const API_URL = "https://data.getty.edu/museum/collection/sparql"
 	const DEFAULT_QUERY = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -14,6 +16,7 @@ SELECT * WHERE {
 
 	const queryString = ref(DEFAULT_QUERY)
 	const results = ref({})
+	const errorMsg = ref('')
 
 	async function runQuery() {
 		const headers = new Headers();
@@ -30,13 +33,15 @@ SELECT * WHERE {
 
 		try {
 			const resp = await fetch(req);
+			const json = await resp.json();
 			if (!resp.ok) {
+				if (json.errors?.length > 0) {
+					 errorMsg.value = json.errors[0].detail
+				}
 				throw new Error(`Unable to query collections`);
 			}
 
-			const json = await resp.json();
-
-			if (json.results && json.results.bindings && json.results.bindings.length > 0){
+			if (json.results?.bindings?.length > 0){
 				results.value = json.results.bindings
 			}
 		} catch (err) {
@@ -50,10 +55,11 @@ SELECT * WHERE {
 	<div class="container">
 		<h2>Query Getty Collections</h2>
 
+		<Alert level="danger" :message="errorMsg" />
+		
 		<div class="row">
 			<QueryInput v-model:query-string="queryString" @fetch-query-results="runQuery"/>
 		</div>
-
 		<div class="row">
 			<QueryResults :results="results"/>
 		</div>
