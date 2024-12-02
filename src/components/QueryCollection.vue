@@ -1,6 +1,8 @@
 <script setup>
 	import { ref, watchEffect } from 'vue';
+	
 	import QueryResults from './QueryResults.vue';
+	import QueryInput from './QueryInput.vue';
 
 	const API_URL = "https://data.getty.edu/museum/collection/sparql"
 	const DEFAULT_QUERY = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -67,18 +69,7 @@ SELECT * WHERE {
 		<h2>Query Getty Collections</h2>
 
 		<div class="row">
-			<div class="query-box">
-				<form @submit.prevent="runQuery">
-					<div class="row">
-						<div class="col-9">
-							<textarea class="query-input" v-model="queryString"></textarea>
-						</div>
-						<div class="col-3">
-							<input type="submit" value="Run Query" class="btn btn-primary" />
-						</div>
-					</div>
-				</form>
-			</div>
+			<QueryInput v-model:query-string="queryString" @fetch-query-results="runQuery"/>
 		</div>
 
 		<div class="row">
@@ -87,11 +78,3 @@ SELECT * WHERE {
 	</div>
 </template>
 
-<style>
-	.query-box {
-		textarea {
-			width: 100%;
-			height: 300px;
-		}
-	}
-</style>
