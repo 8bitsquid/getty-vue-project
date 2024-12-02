@@ -3,6 +3,7 @@
 		queryString: String,
 		submitHandler: Function
 	});
+	defineEmits(['fetchQueryResults'])
 
 	const query = defineModel('queryString');
 </script>
