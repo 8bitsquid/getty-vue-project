@@ -10,24 +10,6 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT * WHERE { 
 	?sub ?pred ?obj . 
 } LIMIT 10`
-
-	// const results = ref([
-	// 	{
-	// 		sub: "sub1",
-	// 		pred: "pred1",
-	// 		obj: "obj1"
-	// 	},
-	// 	{
-	// 		sub: "sub2",
-	// 		pred: "pred2",
-	// 		obj: "obj2"
-	// 	},
-	// 	{
-	// 		sub: "sub3",
-	// 		pred: "pred3",
-	// 		obj: "obj3"
-	// 	}
-	// ]);
 	
 
 	const queryString = ref(DEFAULT_QUERY)
