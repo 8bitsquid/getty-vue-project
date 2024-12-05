@@ -14,6 +14,7 @@ SELECT * WHERE {
 	
 
 	const queryString = ref(DEFAULT_QUERY)
+	const querySeconds = ref(0)
 	const results = ref({})
 	const errorMsg = ref('')
 
@@ -29,7 +30,7 @@ SELECT * WHERE {
 			headers: headers
 		});
 
-
+		const startTime = Date.now();
 		try {
 			const resp = await fetch(req);
 			const json = await resp.json();
@@ -46,6 +47,8 @@ SELECT * WHERE {
 			}
 		} catch (err) {
 			console.error(err.message)
+		} finally {
+			querySeconds.value = (Date.now() - startTime);
 		}
 	}
 	
@@ -57,7 +60,7 @@ SELECT * WHERE {
 
 		<Alert level="danger" :message="errorMsg" />
 		<QueryInput v-model:query-string="queryString" @fetch-query-results="runQuery" />
-		<QueryResults :results="results" v-if="results.length"/>
+		<QueryResults :results="results" :query-seconds="querySeconds" v-if="results.length"/>
 
 	</div>
 </template>

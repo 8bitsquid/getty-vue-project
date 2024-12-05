@@ -1,16 +1,18 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 
-const { results } = defineProps(['results']);
+const { results, stats } = defineProps({
+	results: Array,
+	querySeconds: Number
+});
 const currPage = ref(0)
 const numPerPage = ref(50);
 const totalPages = computed(() => Math.ceil(results.length  / numPerPage.value));
 const compactView = ref(false);
 const wrapText = ref(false);
-const wrapTextClass = computed(() => wrapText.value ? '' : 'text-nowrap')
+const wrapTextClass = computed(() => wrapText.value ? '' : 'text-nowrap');
 
 const filteredResults = computed(() => {
-	console.log(`page: ${currPage.value}, total: ${totalPages.value}`)
 	if (results.length > 0) {
 		let perpage = parseInt(numPerPage.value)
 		let start = (currPage.value * perpage) + currPage.value;
@@ -20,7 +22,7 @@ const filteredResults = computed(() => {
 	else {
 		return results
 	}
-})
+});
 
 function setPage(page){
 	currPage.value = page - 1;
@@ -28,21 +30,27 @@ function setPage(page){
 
 function prevPage(){
 	if (currPage.value > 0) {
-		currPage.value--;
+		setPage(currPage.value - 1);
 	}
 }
 
 function nextPage() {
 	if (currPage.value < totalPages.value) {
-		currPage.value++;
+		setPage(currPage.value + 1);
 	}
 }
+
+watch(numPerPage, (newVal, oldVal) => {
+	if (newVal !== oldVal) {
+		setPage(1)
+	} 
+});
 
 </script>
 
 <template>
 	<div class="row">
-		<div class="col-2">
+		<div class="col-2 offset-6">
 			<div class="form-check form-switch">
 				<input class="form-check-input" type="checkbox" role="switch" id="compact_view" v-model="compactView" />
 				<label class="form-check-label" for="compact_view">Compact View</label>
@@ -68,6 +76,7 @@ function nextPage() {
 	</div>
 
 	<div class="row">
+		<small>Retrieved {{ results.length }} results in {{ querySeconds }}ms</small>
 		<div class="table-responsive">
 			<table class="table table-striped table-hover" :class="{'table-sm': compactView}">
 				<thead>
