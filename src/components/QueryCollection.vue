@@ -56,8 +56,8 @@ SELECT * WHERE {
 		<h2>Query Getty Collections</h2>
 
 		<Alert level="danger" :message="errorMsg" />
-		<QueryInput v-model:query-string="queryString" @fetch-query-results="runQuery"/>
-		<QueryResults :results="results"/>
+		<QueryInput v-model:query-string="queryString" @fetch-query-results="runQuery" />
+		<QueryResults :results="results" v-if="results.length"/>
 
 	</div>
 </template>
