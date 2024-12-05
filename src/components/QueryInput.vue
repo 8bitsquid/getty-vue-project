@@ -9,17 +9,19 @@
 </script>
 
 <template>
-	<div class="query-box">
-		<form @submit.prevent="$emit('fetchQueryResults')">
-			<div class="row">
-				<div class="col-9">
-					<textarea v-model="query"></textarea>
+	<div class="row">
+		<div class="query-box">
+			<form @submit.prevent="$emit('fetchQueryResults')">
+				<div class="row">
+					<div class="col-9">
+						<textarea v-model="query"></textarea>
+					</div>
+					<div class="col-3">
+						<input type="submit" value="Run Query" class="btn btn-primary" />
+					</div>
 				</div>
-				<div class="col-3">
-					<input type="submit" value="Run Query" class="btn btn-primary" />
-				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
 </template>
 
