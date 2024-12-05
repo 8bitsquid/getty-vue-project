@@ -1,5 +1,5 @@
 <script setup>
-	import { computed, watch, ref, watchEffect } from 'vue';
+	import { computed, ref, watchEffect } from 'vue';
 
 	const { level, message } = defineProps({
 		level: {

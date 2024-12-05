@@ -3,15 +3,14 @@
 	
 	import QueryResults from './QueryResults.vue';
 	import QueryInput from './QueryInput.vue';
-	import Alert from './Alert.vue';
-	import { parse } from '../tools/jsony';
+	import Alert from './BaseAlert.vue';
 
 	const API_URL = "https://data.getty.edu/museum/collection/sparql"
 	const DEFAULT_QUERY = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT * WHERE { 
 	?sub ?pred ?obj . 
-} LIMIT 10`
+} LIMIT 60`
 	
 
 	const queryString = ref(DEFAULT_QUERY)
@@ -38,6 +37,7 @@ SELECT * WHERE {
 				if (json.errors?.length > 0) {
 					 errorMsg.value = json.errors[0].detail
 				}
+				results.value = {};
 				throw new Error(`Unable to query collections`);
 			}
 
@@ -56,13 +56,9 @@ SELECT * WHERE {
 		<h2>Query Getty Collections</h2>
 
 		<Alert level="danger" :message="errorMsg" />
-		
-		<div class="row">
-			<QueryInput v-model:query-string="queryString" @fetch-query-results="runQuery"/>
-		</div>
-		<div class="row">
-			<QueryResults :results="results"/>
-		</div>
+		<QueryInput v-model:query-string="queryString" @fetch-query-results="runQuery"/>
+		<QueryResults :results="results"/>
+
 	</div>
 </template>
 
